@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,7 +7,7 @@ namespace ChemicalCrux.StencilViewer.Editor.Controls
     /// <summary>
     /// Pings an object when clicked.
     /// </summary>
-    public class StencilRefField : VisualElement, INotifyValueChanged<int>
+    public class StencilRefField : BindableElement, INotifyValueChanged<int>
     {
         private int stencilRef;
 
@@ -20,6 +19,7 @@ namespace ChemicalCrux.StencilViewer.Editor.Controls
         {
             
         } 
+        
         public StencilRefField(string labelText)
         {
             slider = new SliderInt(0, 255);
@@ -84,7 +84,7 @@ namespace ChemicalCrux.StencilViewer.Editor.Controls
             }
         }
 
-        public new class UxmlTraits : VisualElement.UxmlTraits
+        public new class UxmlTraits : BindableElement.UxmlTraits
         {
             public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
             {

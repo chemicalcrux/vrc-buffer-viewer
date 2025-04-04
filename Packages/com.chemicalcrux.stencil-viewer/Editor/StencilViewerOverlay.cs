@@ -1,6 +1,7 @@
 using ChemicalCrux.StencilViewer.Editor.Controls;
 using UnityEditor;
 using UnityEditor.Overlays;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
@@ -14,33 +15,26 @@ namespace ChemicalCrux.StencilViewer.Editor
     }
 
     [Overlay(typeof(SceneView), "Stencil Viewer")]
-    public class OverlayTest : Overlay
+    public class StencilViewerOverlay : Overlay
     {
         private VisualElement root;
         
         private Mesh mesh;
         private Material activeMaterial;
 
-        private bool uiReady = false;
-        private bool shadersReady = false;
+        private bool uiReady;
+        private bool shadersReady;
 
         private Material stencilViewerMaterial;
         private Material stencilMatcherMaterial;
 
         private Material displayResultMaterial;
 
-        private bool activated;
-
-        private ViewerMode mode;
-
-        private int renderQueue = 4000;
-        private int stencilRef = 0;
-        private float opacity = 1;
+        private StencilViewerData data;
 
         private static readonly int StencilRef = Shader.PropertyToID("_StencilRef");
         private static readonly int Opacity = Shader.PropertyToID("_Opacity");
 
-        private SliderInt renderQueueField;
         private StencilRefField stencilRefField;
 
         void Draw(Camera camera)
@@ -48,7 +42,7 @@ namespace ChemicalCrux.StencilViewer.Editor
             if (!displayed)
                 return;
 
-            if (!activated)
+            if (!data.active)
                 return;
 
             if (!(mesh && activeMaterial))
@@ -57,10 +51,11 @@ namespace ChemicalCrux.StencilViewer.Editor
             if (!shadersReady)
                 return;
             
-            activeMaterial.renderQueue = renderQueue;
-            activeMaterial.SetInteger(StencilRef, stencilRef);
+            activeMaterial.renderQueue = data.renderQueue;
 
-            displayResultMaterial.SetFloat(Opacity, opacity);
+            activeMaterial.SetInteger(StencilRef, data.stencilRef);
+
+            displayResultMaterial.SetFloat(Opacity, data.opacity);
 
             var cameraTransform = camera.transform;
             Vector3 pos = cameraTransform.position + cameraTransform.forward * camera.nearClipPlane * 1.1f;
@@ -108,6 +103,8 @@ namespace ChemicalCrux.StencilViewer.Editor
                     2
                 }
             };
+
+            data = StencilViewerData.instance;
         }
 
         public override void OnWillBeDestroyed()
@@ -141,13 +138,11 @@ namespace ChemicalCrux.StencilViewer.Editor
             shadersReady = true;
         }
 
-        private void SetMode(ViewerMode newMode)
+        private void SetMode()
         {
             stencilRefField.style.display = DisplayStyle.None;
 
-            mode = newMode;
-
-            switch (mode)
+            switch (data.mode)
             {
                 case ViewerMode.ShowBuffer:
                     activeMaterial = stencilViewerMaterial;
@@ -180,27 +175,18 @@ namespace ChemicalCrux.StencilViewer.Editor
 
             uxml.CloneTree(root);
 
-            var toggle = root.Q<Toggle>("Active");
-            toggle.RegisterValueChangedCallback(evt => { activated = evt.newValue; });
-
-            var modeDropdown = root.Q<EnumField>("Mode");
-            modeDropdown.Init(mode);
-            modeDropdown.RegisterValueChangedCallback(evt => { SetMode((ViewerMode)evt.newValue); });
-
-            renderQueueField = root.Q<SliderInt>("RenderQueue");
-            renderQueueField.value = renderQueue;
-            renderQueueField.RegisterValueChangedCallback(evt => { renderQueue = evt.newValue; });
+            var so = new SerializedObject(data);
+            root.Bind(so);
 
             stencilRefField = root.Q<StencilRefField>("StencilRef");
-            stencilRefField.value = stencilRef;
-            stencilRefField.RegisterValueChangedCallback(evt => { stencilRef = evt.newValue; });
 
-            var opacityField = root.Q<Slider>("Opacity");
-            opacityField.value = opacity;
-            opacityField.RegisterValueChangedCallback(evt => { opacity = evt.newValue; });
+            root.TrackPropertyValue(so.FindProperty("mode"), evt =>
+            {
+                SetMode();
+            });
 
-            SetMode(mode);
-
+            SetMode();
+            
             uiReady = true;
         }
 

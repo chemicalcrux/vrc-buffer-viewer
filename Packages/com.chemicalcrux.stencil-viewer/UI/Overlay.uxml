@@ -1,7 +1,7 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <ui:Toggle label="Active" name="Active" />
-    <ui:EnumField label="Mode" type="ChemicalCrux.StencilViewer.Editor.ViewerMode, StencilViewerEditor" name="Mode" />
-    <ChemicalCrux.StencilViewer.Editor.Controls.StencilRefField name="StencilRef" />
-    <ui:SliderInt label="Queue" high-value="5000" name="RenderQueue" show-input-field="true" style="min-width: 400px;" />
-    <ui:Slider label="Opacity" high-value="1" name="Opacity" />
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <uie:PropertyField binding-path="active" />
+    <uie:PropertyField binding-path="mode" name="Mode" />
+    <ChemicalCrux.StencilViewer.Editor.Controls.StencilRefField name="StencilRef" binding-path="stencilRef" />
+    <uie:PropertyField binding-path="renderQueue" />
+    <ui:Slider high-value="1" binding-path="opacity" label="Opacity" />
 </ui:UXML>
