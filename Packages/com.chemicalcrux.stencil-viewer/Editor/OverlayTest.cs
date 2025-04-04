@@ -16,9 +16,12 @@ namespace ChemicalCrux.StencilViewer.Editor
     [Overlay(typeof(SceneView), "Stencil Viewer")]
     public class OverlayTest : Overlay
     {
+        private VisualElement root;
+        
         private Mesh mesh;
         private Material activeMaterial;
 
+        private bool uiReady = false;
         private bool shadersReady = false;
 
         private Material stencilViewerMaterial;
@@ -52,12 +55,7 @@ namespace ChemicalCrux.StencilViewer.Editor
                 return;
 
             if (!shadersReady)
-            {
-                LoadShaders();
-                
-                if (!shadersReady)
-                    return;
-            }
+                return;
             
             activeMaterial.renderQueue = renderQueue;
             activeMaterial.SetInteger(StencilRef, stencilRef);
@@ -110,8 +108,6 @@ namespace ChemicalCrux.StencilViewer.Editor
                     2
                 }
             };
-
-            LoadShaders();
         }
 
         public override void OnWillBeDestroyed()
@@ -168,10 +164,22 @@ namespace ChemicalCrux.StencilViewer.Editor
 
         public override VisualElement CreatePanelContent()
         {
+            root = new VisualElement();
+
+            TryAgain();
+            
+            return root;
+        }
+
+        private void SetupUI()
+        {
             var uxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
                 "Packages/com.chemicalcrux.stencil-viewer/UI/Overlay.uxml");
 
-            var root = uxml.Instantiate();
+            if (uxml == null)
+                return;
+
+            uxml.CloneTree(root);
 
             var toggle = root.Q<Toggle>("Active");
             toggle.RegisterValueChangedCallback(evt => { activated = evt.newValue; });
@@ -191,10 +199,22 @@ namespace ChemicalCrux.StencilViewer.Editor
             var opacityField = root.Q<Slider>("Opacity");
             opacityField.value = opacity;
             opacityField.RegisterValueChangedCallback(evt => { opacity = evt.newValue; });
-            
+
             SetMode(mode);
 
-            return root;
+            uiReady = true;
+        }
+
+        void TryAgain()
+        {
+            if (!shadersReady)
+                LoadShaders();
+
+            if (!uiReady)
+                SetupUI();
+
+            if (!shadersReady || !uiReady)
+                EditorApplication.update += TryAgain;
         }
     }
 }

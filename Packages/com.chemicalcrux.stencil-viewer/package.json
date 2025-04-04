@@ -1,7 +1,7 @@
 {
   "name": "com.chemicalcrux.stencil-viewer",
   "displayName": "Stencil Viewer",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "unity": "2022.3",
   "description": "Shows the contents of the stencil buffer.",
   "vrchatVersion": "2025.1.2",
