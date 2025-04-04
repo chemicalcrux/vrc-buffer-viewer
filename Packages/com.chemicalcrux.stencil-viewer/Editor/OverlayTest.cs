@@ -12,13 +12,13 @@ namespace ChemicalCrux.StencilViewer.Editor
         ShowBuffer,
         ShowMatching
     }
-    
+
     [Overlay(typeof(SceneView), "Stencil Viewer")]
     public class OverlayTest : Overlay
     {
         private Mesh mesh;
         private Material activeMaterial;
-        
+
         private Material stencilViewerMaterial;
         private Material stencilMatcherMaterial;
 
@@ -27,8 +27,10 @@ namespace ChemicalCrux.StencilViewer.Editor
         private ViewerMode mode;
 
         private int stencilRef;
-        
+
         private static readonly int StencilRef = Shader.PropertyToID("_StencilRef");
+
+        private StencilRefField stencilRefField;
 
         void Draw(Camera camera)
         {
@@ -37,7 +39,7 @@ namespace ChemicalCrux.StencilViewer.Editor
 
             if (!activated)
                 return;
-            
+
             if (!(mesh && activeMaterial))
                 return;
 
@@ -55,7 +57,7 @@ namespace ChemicalCrux.StencilViewer.Editor
         public override void OnCreated()
         {
             base.OnCreated();
-            
+
             Camera.onPreCull -= Draw;
             Camera.onPreCull += Draw;
 
@@ -81,24 +83,24 @@ namespace ChemicalCrux.StencilViewer.Editor
 
             stencilViewerMaterial = new Material(Shader.Find("Hidden/chemicalcrux/Stencil Viewer/Stencil View"));
             stencilMatcherMaterial = new Material(Shader.Find("Hidden/chemicalcrux/Stencil Viewer/Stencil Match"));
-
-            SetMode(mode);
         }
 
         public override void OnWillBeDestroyed()
         {
             base.OnWillBeDestroyed();
-            
+
             Object.DestroyImmediate(mesh);
-            
+
             Object.DestroyImmediate(stencilViewerMaterial);
             Object.DestroyImmediate(stencilMatcherMaterial);
-            
+
             Camera.onPreCull -= Draw;
         }
 
         private void SetMode(ViewerMode newMode)
         {
+            stencilRefField.style.display = DisplayStyle.None;
+            
             mode = newMode;
 
             switch (mode)
@@ -107,6 +109,7 @@ namespace ChemicalCrux.StencilViewer.Editor
                     activeMaterial = stencilViewerMaterial;
                     break;
                 case ViewerMode.ShowMatching:
+                    stencilRefField.style.display = DisplayStyle.Flex;
                     activeMaterial = stencilMatcherMaterial;
                     break;
                 default:
@@ -114,6 +117,7 @@ namespace ChemicalCrux.StencilViewer.Editor
                     break;
             }
         }
+
         public override VisualElement CreatePanelContent()
         {
             var root = new VisualElement();
@@ -125,32 +129,25 @@ namespace ChemicalCrux.StencilViewer.Editor
 
             root.Add(toggle);
 
-            toggle.RegisterValueChangedCallback(evt =>
-            {
-                activated = evt.newValue;
-            });
+            toggle.RegisterValueChangedCallback(evt => { activated = evt.newValue; });
 
             var modeDropdown = new EnumField();
             modeDropdown.Init(mode);
 
-            modeDropdown.RegisterValueChangedCallback(evt =>
-            {
-                SetMode((ViewerMode)evt.newValue);
-            });
+            modeDropdown.RegisterValueChangedCallback(evt => { SetMode((ViewerMode)evt.newValue); });
 
             root.Add(modeDropdown);
 
-            var refField = new StencilRefField
+            stencilRefField = new StencilRefField
             {
                 value = stencilRef
             };
 
-            refField.RegisterValueChangedCallback(evt =>
-            {
-                stencilRef = evt.newValue;
-            });
+            stencilRefField.RegisterValueChangedCallback(evt => { stencilRef = evt.newValue; });
 
-            root.Add(refField);
+            root.Add(stencilRefField);
+
+            SetMode(mode);
             return root;
         }
     }
