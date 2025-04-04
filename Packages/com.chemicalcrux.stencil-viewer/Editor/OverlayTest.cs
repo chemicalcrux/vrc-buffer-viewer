@@ -30,9 +30,9 @@ namespace ChemicalCrux.StencilViewer.Editor
 
         private ViewerMode mode;
 
-        private int renderQueue;
-        private int stencilRef;
-        private float opacity;
+        private int renderQueue = 4000;
+        private int stencilRef = 0;
+        private float opacity = 1;
 
         private static readonly int StencilRef = Shader.PropertyToID("_StencilRef");
         private static readonly int Opacity = Shader.PropertyToID("_Opacity");
@@ -181,12 +181,15 @@ namespace ChemicalCrux.StencilViewer.Editor
             modeDropdown.RegisterValueChangedCallback(evt => { SetMode((ViewerMode)evt.newValue); });
 
             renderQueueField = root.Q<SliderInt>("RenderQueue");
+            renderQueueField.value = renderQueue;
             renderQueueField.RegisterValueChangedCallback(evt => { renderQueue = evt.newValue; });
 
             stencilRefField = root.Q<StencilRefField>("StencilRef");
+            stencilRefField.value = stencilRef;
             stencilRefField.RegisterValueChangedCallback(evt => { stencilRef = evt.newValue; });
 
             var opacityField = root.Q<Slider>("Opacity");
+            opacityField.value = opacity;
             opacityField.RegisterValueChangedCallback(evt => { opacity = evt.newValue; });
             
             SetMode(mode);
