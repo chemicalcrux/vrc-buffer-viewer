@@ -164,10 +164,9 @@ namespace ChemicalCrux.StencilViewer.Editor
 
         public override VisualElement CreatePanelContent()
         {
+            uiReady = false;
             root = new VisualElement();
-
             TryAgain();
-            
             return root;
         }
 
