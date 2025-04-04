@@ -19,6 +19,8 @@ namespace ChemicalCrux.StencilViewer.Editor
         private Mesh mesh;
         private Material activeMaterial;
 
+        private bool shadersReady = false;
+
         private Material stencilViewerMaterial;
         private Material stencilMatcherMaterial;
 
@@ -49,6 +51,14 @@ namespace ChemicalCrux.StencilViewer.Editor
             if (!(mesh && activeMaterial))
                 return;
 
+            if (!shadersReady)
+            {
+                LoadShaders();
+                
+                if (!shadersReady)
+                    return;
+            }
+            
             activeMaterial.renderQueue = renderQueue;
             activeMaterial.SetInteger(StencilRef, stencilRef);
 
@@ -101,10 +111,7 @@ namespace ChemicalCrux.StencilViewer.Editor
                 }
             };
 
-            stencilViewerMaterial = new Material(Shader.Find("Hidden/chemicalcrux/Stencil Viewer/Stencil View"));
-            stencilMatcherMaterial = new Material(Shader.Find("Hidden/chemicalcrux/Stencil Viewer/Stencil Match"));
-
-            displayResultMaterial = new Material(Shader.Find("Hidden/chemicalcrux/Stencil Viewer/Display Result"));
+            LoadShaders();
         }
 
         public override void OnWillBeDestroyed()
@@ -119,6 +126,23 @@ namespace ChemicalCrux.StencilViewer.Editor
             Object.DestroyImmediate(mesh);
 
             Camera.onPreCull -= Draw;
+        }
+
+        private void LoadShaders()
+        {
+            var viewShader = Shader.Find("Hidden/chemicalcrux/Stencil Viewer/Stencil View");
+            var matchShader = Shader.Find("Hidden/chemicalcrux/Stencil Viewer/Stencil Match");
+            var displayShader = Shader.Find("Hidden/chemicalcrux/Stencil Viewer/Display Result");
+
+            if (!viewShader || !matchShader || !displayShader)
+                return;
+            
+            stencilViewerMaterial = new Material(viewShader);
+            stencilMatcherMaterial = new Material(matchShader);
+
+            displayResultMaterial = new Material(displayShader);
+
+            shadersReady = true;
         }
 
         private void SetMode(ViewerMode newMode)
