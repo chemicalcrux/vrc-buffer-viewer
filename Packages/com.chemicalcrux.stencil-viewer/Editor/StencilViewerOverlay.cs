@@ -34,6 +34,7 @@ namespace ChemicalCrux.StencilViewer.Editor
 
         private static readonly int StencilRef = Shader.PropertyToID("_StencilRef");
         private static readonly int Opacity = Shader.PropertyToID("_Opacity");
+        private static readonly int BlendMode = Shader.PropertyToID("_BlendMode");
 
         private StencilRefField stencilRefField;
 
@@ -56,6 +57,7 @@ namespace ChemicalCrux.StencilViewer.Editor
             activeMaterial.SetInteger(StencilRef, data.stencilRef);
 
             displayResultMaterial.SetFloat(Opacity, data.opacity);
+            displayResultMaterial.SetFloat(BlendMode, (float) data.blendMode);
 
             var cameraTransform = camera.transform;
             Vector3 pos = cameraTransform.position + cameraTransform.forward * camera.nearClipPlane * 1.1f;
@@ -180,7 +182,7 @@ namespace ChemicalCrux.StencilViewer.Editor
 
             stencilRefField = root.Q<StencilRefField>("StencilRef");
 
-            root.TrackPropertyValue(so.FindProperty("mode"), evt =>
+            root.TrackPropertyValue(so.FindProperty("mode"), _ =>
             {
                 SetMode();
             });

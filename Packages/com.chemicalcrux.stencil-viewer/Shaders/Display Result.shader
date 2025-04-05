@@ -3,7 +3,7 @@ Shader "Hidden/chemicalcrux/Stencil Viewer/Display Result"
     Properties
     {
         _Opacity ("Opacity", Range(0, 1)) = 1
-        _StencilRef ("Stencil Ref", Integer) = 0
+        [Enum(Normal, 0, Multiply, 1)] _BlendMode ("Blend Mode", Float) = 0
     }
     SubShader
     {
@@ -15,9 +15,13 @@ Shader "Hidden/chemicalcrux/Stencil Viewer/Display Result"
         ZWrite Off
         ZTest Always
 
+        GrabPass
+        {
+            "_SceneColor"
+        }
         Pass
         {
-            Blend SrcAlpha OneMinusSrcAlpha
+            Blend One Zero
 
             CGPROGRAM
             #pragma vertex vert
@@ -26,7 +30,11 @@ Shader "Hidden/chemicalcrux/Stencil Viewer/Display Result"
             #include "UnityCG.cginc"
 
             SamplerState LinearRepeat;
+
+            int _BlendMode;
+
             Texture2D _StencilViewGrab;
+            Texture2D _SceneColor;
 
             float _Opacity;
 
@@ -44,23 +52,39 @@ Shader "Hidden/chemicalcrux/Stencil Viewer/Display Result"
             v2f vert(appdata v)
             {
                 v2f o;
-                
+
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.clipPos = o.vertex;
-                
+
                 return o;
             }
-            
+
             fixed4 frag(v2f i) : SV_Target
             {
                 i.clipPos /= i.clipPos.w;
                 float4 grabPos = ComputeGrabScreenPos(i.clipPos);
                 grabPos /= grabPos.w;
 
+                float4 sceneColor = _SceneColor.Sample(LinearRepeat, grabPos.xy);
+
                 float4 col = _StencilViewGrab.Sample(LinearRepeat, grabPos.xy);
-                col.w = _Opacity;
+
+                float4 resultColor;
+
+                switch (_BlendMode)
+                {
+                case 0:
+                    resultColor = col;
+                    break;
+                case 1:
+                    resultColor = sceneColor * col;
+                    break;
+                default:
+                    resultColor = 0;
+                    break;
+                }
                 
-                return col;
+                return lerp(sceneColor, resultColor, _Opacity);
             }
             ENDCG
         }
