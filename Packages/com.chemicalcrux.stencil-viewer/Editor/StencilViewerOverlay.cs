@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ChemicalCrux.StencilViewer.Editor.Controls;
 using UnityEditor;
 using UnityEditor.Overlays;
@@ -37,6 +40,7 @@ namespace ChemicalCrux.StencilViewer.Editor
         private static readonly int BlendMode = Shader.PropertyToID("_BlendMode");
 
         private StencilRefField stencilRefField;
+        private RenderQueueSlider renderQueueSlider;
 
         void Draw(Camera camera)
         {
@@ -157,6 +161,14 @@ namespace ChemicalCrux.StencilViewer.Editor
                     Debug.LogWarning("I don't know how you picked an invalid mode");
                     break;
             }
+
+            if (uiReady && renderQueueSlider != null)
+            {
+                foreach (var group in GetQueuesInScene())
+                {
+                    renderQueueSlider.AddTick(group.Item1);
+                }
+            }
         }
 
         public override VisualElement CreatePanelContent()
@@ -187,9 +199,9 @@ namespace ChemicalCrux.StencilViewer.Editor
                 SetMode();
             });
 
-            SetMode();
-            
             uiReady = true;
+            
+            EditorApplication.delayCall += WaitForUI;
         }
 
         void TryAgain()
@@ -201,7 +213,36 @@ namespace ChemicalCrux.StencilViewer.Editor
                 SetupUI();
 
             if (!shadersReady || !uiReady)
-                EditorApplication.update += TryAgain;
+                EditorApplication.delayCall += TryAgain;
+        }
+
+        void WaitForUI()
+        {
+            renderQueueSlider = root.Q<RenderQueueSlider>();
+            SetMode();
+        }
+
+        private IEnumerable<(int, int)> GetQueuesInScene()
+        {
+            return Object.FindObjectsByType<Renderer>(FindObjectsSortMode.InstanceID)
+                .SelectMany(static renderer => renderer.sharedMaterials)
+                .GroupBy(static material => material.renderQueue)
+                .OrderBy(static group => group.Key)
+                .Select(static group => (group.Key, group.Count()));
+        }
+
+        public IEnumerable<(int, IEnumerable<(Renderer, Material)>)> GetAllRendererMaterialPairs()
+        {
+            Vector3 x = default;
+            float y = 1;
+            Math.Abs(y);
+            
+            return Object.FindObjectsByType<Renderer>(FindObjectsSortMode.InstanceID)
+                .SelectMany(static renderer => renderer.sharedMaterials
+                    .Select(material => (renderer, material)))
+                .GroupBy(tuple => tuple.material.renderQueue)
+                .OrderBy(grouping => grouping.Key)
+                .Select(grouping => (grouping.Key, grouping.AsEnumerable()));
         }
     }
 }

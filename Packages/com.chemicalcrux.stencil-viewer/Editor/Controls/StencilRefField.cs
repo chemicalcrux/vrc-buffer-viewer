@@ -4,9 +4,6 @@ using UnityEngine.UIElements;
 
 namespace ChemicalCrux.StencilViewer.Editor.Controls
 {
-    /// <summary>
-    /// Pings an object when clicked.
-    /// </summary>
     public class StencilRefField : BindableElement, INotifyValueChanged<int>
     {
         private int stencilRef;
