@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ChemicalCrux.StencilViewer.Editor.Controls;
+using Crux.BufferViewer.Editor.Controls;
 using Crux.Core.Editor;
 using UnityEditor;
 using UnityEditor.Overlays;
@@ -10,13 +10,13 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using Object = UnityEngine.Object;
 
-namespace ChemicalCrux.StencilViewer.Editor
+namespace Crux.BufferViewer.Editor
 {
     public enum ViewerMode
     {
-        ShowBuffer,
-        ShowMatching,
-        ShowDepth
+        StencilBuffer,
+        StencilTest,
+        DepthBuffer
     }
 
     [Overlay(typeof(SceneView), "Stencil Viewer")]
@@ -46,6 +46,9 @@ namespace ChemicalCrux.StencilViewer.Editor
 
         private StencilRefField stencilRefField;
         private RenderQueueSlider renderQueueSlider;
+
+        private VisualElement stencilSettingsHolder;
+        private VisualElement depthSettingsHolder;
 
         void Draw(Camera camera)
         {
@@ -156,17 +159,22 @@ namespace ChemicalCrux.StencilViewer.Editor
         private void SetMode()
         {
             stencilRefField.style.display = DisplayStyle.None;
+            stencilSettingsHolder.style.display = DisplayStyle.None;
+            depthSettingsHolder.style.display = DisplayStyle.None;
 
             switch (data.mode)
             {
-                case ViewerMode.ShowBuffer:
+                case ViewerMode.StencilBuffer:
+                    stencilSettingsHolder.style.display = DisplayStyle.Flex;
                     activeMaterial = stencilViewerMaterial;
                     break;
-                case ViewerMode.ShowMatching:
+                case ViewerMode.StencilTest:
+                    stencilSettingsHolder.style.display = DisplayStyle.Flex;
                     stencilRefField.style.display = DisplayStyle.Flex;
                     activeMaterial = stencilMatcherMaterial;
                     break;
-                case ViewerMode.ShowDepth:
+                case ViewerMode.DepthBuffer:
+                    depthSettingsHolder.style.display = DisplayStyle.Flex;
                     activeMaterial = depthViewerMaterial;
                     break;
                 default:
@@ -205,6 +213,8 @@ namespace ChemicalCrux.StencilViewer.Editor
             root.Bind(so);
 
             stencilRefField = root.Q<StencilRefField>("StencilRef");
+            stencilSettingsHolder = root.Q("StencilSettings");
+            depthSettingsHolder = root.Q("DepthSettings");
 
             root.TrackPropertyValue(so.FindProperty("mode"), _ =>
             {

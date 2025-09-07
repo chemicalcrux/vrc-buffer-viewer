@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-namespace ChemicalCrux.StencilViewer.Editor.Controls
+namespace Crux.BufferViewer.Editor.Controls
 {
     public class RenderQueueTimeline : VisualElement
     {

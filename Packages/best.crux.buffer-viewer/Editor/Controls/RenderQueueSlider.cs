@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Permissions;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace ChemicalCrux.StencilViewer.Editor.Controls
+namespace Crux.BufferViewer.Editor.Controls
 {
     public class RenderQueueSlider : SliderInt
     {

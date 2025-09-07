@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace ChemicalCrux.StencilViewer.Editor
+namespace Crux.BufferViewer.Editor
 {
     public enum BlendMode
     {
