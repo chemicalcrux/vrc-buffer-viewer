@@ -2,12 +2,15 @@
     <uie:PropertyField binding-path="active" />
     <uie:PropertyField binding-path="mode" name="Mode" />
     <ui:GroupBox name="StencilSettings">
-        <Crux.BufferViewer.Editor.Controls.StencilRefField name="StencilRef" binding-path="stencilRef" />
+        <ui:GroupBox name="StencilTestSettings">
+            <uie:PropertyField binding-path="stencilComp" />
+            <Crux.BufferViewer.Editor.Controls.StencilRefField name="StencilRef" binding-path="stencilRef" />
+        </ui:GroupBox>
     </ui:GroupBox>
     <ui:GroupBox name="DepthSettings">
         <uie:PropertyField binding-path="showFarPlane" />
     </ui:GroupBox>
     <Crux.BufferViewer.Editor.Controls.RenderQueueTimeline name="RenderQueue" label="Queue" high-value="5000" show-input-field="true" slider-binding-path="renderQueue" style="width: 400px;" />
     <ui:Slider high-value="1" binding-path="opacity" label="Opacity" />
-    <ui:EnumField label="Blend" type="ChemicalCrux.StencilViewer.Editor.BlendMode, StencilViewerEditor" binding-path="blendMode" />
+    <ui:EnumField label="Blend" type="Crux.BufferViewer.Editor.BlendMode, Crux.BufferViewer.Editor" binding-path="blendMode" />
 </ui:UXML>

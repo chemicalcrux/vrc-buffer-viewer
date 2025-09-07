@@ -19,7 +19,7 @@ namespace Crux.BufferViewer.Editor
         DepthBuffer
     }
 
-    [Overlay(typeof(SceneView), "Stencil Viewer")]
+    [Overlay(typeof(SceneView), "Buffer Viewer")]
     public class StencilViewerOverlay : Overlay
     {
         private VisualElement root;
@@ -39,6 +39,7 @@ namespace Crux.BufferViewer.Editor
         private StencilViewerData data;
 
         private static readonly int StencilRef = Shader.PropertyToID("_StencilRef");
+        private static readonly int StencilComp = Shader.PropertyToID("_StencilComp");
         private static readonly int ShowFarPlane = Shader.PropertyToID("_ShowFarPlane");
         
         private static readonly int Opacity = Shader.PropertyToID("_Opacity");
@@ -48,6 +49,7 @@ namespace Crux.BufferViewer.Editor
         private RenderQueueSlider renderQueueSlider;
 
         private VisualElement stencilSettingsHolder;
+        private VisualElement stencilTestSettingsHolder;
         private VisualElement depthSettingsHolder;
 
         void Draw(Camera camera)
@@ -67,6 +69,7 @@ namespace Crux.BufferViewer.Editor
             activeMaterial.renderQueue = data.renderQueue;
 
             activeMaterial.SetInteger(StencilRef, data.stencilRef);
+            activeMaterial.SetFloat(StencilComp, (int) data.stencilComp);
             activeMaterial.SetFloat(ShowFarPlane, data.showFarPlane ? 1 : 0);
 
             displayResultMaterial.SetFloat(Opacity, data.opacity);
@@ -160,6 +163,7 @@ namespace Crux.BufferViewer.Editor
         {
             stencilRefField.style.display = DisplayStyle.None;
             stencilSettingsHolder.style.display = DisplayStyle.None;
+            stencilTestSettingsHolder.style.display = DisplayStyle.None;
             depthSettingsHolder.style.display = DisplayStyle.None;
 
             switch (data.mode)
@@ -170,6 +174,7 @@ namespace Crux.BufferViewer.Editor
                     break;
                 case ViewerMode.StencilTest:
                     stencilSettingsHolder.style.display = DisplayStyle.Flex;
+                    stencilTestSettingsHolder.style.display = DisplayStyle.Flex;
                     stencilRefField.style.display = DisplayStyle.Flex;
                     activeMaterial = stencilMatcherMaterial;
                     break;
@@ -214,6 +219,7 @@ namespace Crux.BufferViewer.Editor
 
             stencilRefField = root.Q<StencilRefField>("StencilRef");
             stencilSettingsHolder = root.Q("StencilSettings");
+            stencilTestSettingsHolder = root.Q("StencilTestSettings");
             depthSettingsHolder = root.Q("DepthSettings");
 
             root.TrackPropertyValue(so.FindProperty("mode"), _ =>

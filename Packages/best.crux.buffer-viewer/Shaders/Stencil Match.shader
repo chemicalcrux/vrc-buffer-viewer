@@ -3,6 +3,7 @@ Shader "Hidden/chemicalcrux/Buffer Viewer/Stencil Match"
     Properties
     {
         _StencilRef ("Stencil Ref", Integer) = 0
+        _StencilComp ("Stencil Comp", Integer) = 0
     }
     SubShader
     {
@@ -64,7 +65,7 @@ Shader "Hidden/chemicalcrux/Buffer Viewer/Stencil Match"
             {
                 Ref [_StencilRef]
                 ReadMask 255
-                Comp Equal
+                Comp [_StencilComp]
             }
             
             CGPROGRAM
