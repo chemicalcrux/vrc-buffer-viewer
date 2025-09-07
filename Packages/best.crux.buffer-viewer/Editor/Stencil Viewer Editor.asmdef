@@ -1,7 +1,7 @@
 {
     "name": "StencilViewerEditor",
     "rootNamespace": "ChemicalCrux.StencilViewer.Editor",
-    "references": [],
+    "references": ["GUID:ac31e14ae19024acb994cc8c2bbc3769"],
     "includePlatforms": [
         "Editor"
     ],

@@ -1,4 +1,4 @@
-Shader "Hidden/chemicalcrux/Stencil Viewer/Display Result"
+Shader "Hidden/chemicalcrux/Buffer Viewer/Display Result"
 {
     Properties
     {
@@ -33,7 +33,7 @@ Shader "Hidden/chemicalcrux/Stencil Viewer/Display Result"
 
             int _BlendMode;
 
-            Texture2D _StencilViewGrab;
+            Texture2D _BufferViewGrab;
             Texture2D _SceneColor;
 
             float _Opacity;
@@ -67,7 +67,7 @@ Shader "Hidden/chemicalcrux/Stencil Viewer/Display Result"
 
                 float4 sceneColor = _SceneColor.Sample(LinearRepeat, grabPos.xy);
 
-                float4 col = _StencilViewGrab.Sample(LinearRepeat, grabPos.xy);
+                float4 col = _BufferViewGrab.Sample(LinearRepeat, grabPos.xy);
 
                 float4 resultColor;
 

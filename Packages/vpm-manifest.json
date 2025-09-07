@@ -1,4 +1,13 @@
 {
-  "dependencies": {},
-  "locked": {}
+  "dependencies": {
+    "best.crux.core": {
+      "version": "0.7.0"
+    }
+  },
+  "locked": {
+    "best.crux.core": {
+      "version": "0.7.0",
+      "dependencies": {}
+    }
+  }
 }

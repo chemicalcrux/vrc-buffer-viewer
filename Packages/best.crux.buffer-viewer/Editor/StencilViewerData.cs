@@ -17,5 +17,7 @@ namespace ChemicalCrux.StencilViewer.Editor
         public int stencilRef = 0;
         public float opacity = 1;
         public BlendMode blendMode;
+
+        public bool showFarPlane;
     }
 }

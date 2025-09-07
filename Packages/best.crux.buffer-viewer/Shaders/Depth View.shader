@@ -1,18 +1,15 @@
-Shader "Hidden/chemicalcrux/Buffer Viewer/Stencil Match"
+Shader "Hidden/chemicalcrux/Buffer Viewer/Depth View"
 {
-    Properties
-    {
-        _StencilRef ("Stencil Ref", Integer) = 0
-    }
+    Properties {}
     SubShader
     {
         Tags
         {
-            "RenderType"="Overlay" "Queue"="Overlay"
+            "RenderType"="Overlay" "Queue"="Transparent"
         }
         LOD 100
         ZWrite Off
-        
+
         CGINCLUDE
         #pragma vertex vert
 
@@ -32,13 +29,13 @@ Shader "Hidden/chemicalcrux/Buffer Viewer/Stencil Match"
         v2f vert(appdata v)
         {
             v2f o;
-            
+
             o.vertex = UnityObjectToClipPos(v.vertex);
             o.clipPos = o.vertex;
-            
+
             return o;
         }
-        ENDCG   
+        ENDCG
 
         GrabPass
         {
@@ -47,7 +44,6 @@ Shader "Hidden/chemicalcrux/Buffer Viewer/Stencil Match"
         Pass
         {
             Blend One Zero
-            
             CGPROGRAM
             #pragma fragment frag
 
@@ -60,19 +56,37 @@ Shader "Hidden/chemicalcrux/Buffer Viewer/Stencil Match"
         Pass
         {
             Blend One One
-            Stencil
-            {
-                Ref [_StencilRef]
-                ReadMask 255
-                Comp Equal
-            }
-            
             CGPROGRAM
             #pragma fragment frag
 
+            UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
+
+            bool _ShowFarPlane;
+
+            float inverse_lerp(float from, float to, float value)
+            {
+                return (value - from) / (to - from);
+            }
+
             fixed4 frag(v2f i) : SV_Target
             {
-                return 1;
+                i.clipPos /= i.clipPos.w;
+                float4 grabPos = ComputeGrabScreenPos(i.clipPos);
+                grabPos /= grabPos.w;
+
+                float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, grabPos.xy);
+
+                if (depth == 0 && _ShowFarPlane)
+                {
+                    float2 uv = grabPos;
+                    uv.x *= _ScreenParams.x / _ScreenParams.y;
+                    return (uv.x + uv.y) % 0.02 < 0.01 ? float4(0.4, 0, 0, 1) : float4(0.5, 0, 0, 1);
+                }
+
+                depth = LinearEyeDepth(depth);
+                depth = inverse_lerp(0, 25, depth);
+
+                return float4(depth.xxx, 1);
             }
             ENDCG
         }
@@ -85,7 +99,7 @@ Shader "Hidden/chemicalcrux/Buffer Viewer/Stencil Match"
             Blend One Zero
             CGPROGRAM
             #pragma fragment frag
-            
+
             SamplerState LinearRepeat;
             Texture2D _BufferPreserve;
 

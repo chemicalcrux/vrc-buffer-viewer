@@ -1,7 +1,13 @@
 {
   "dependencies": {
-    "com.chemicalcrux.stencil-viewer": {
-      "version": "file:com.chemicalcrux.stencil-viewer",
+    "best.crux.buffer-viewer": {
+      "version": "file:best.crux.buffer-viewer",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
+    "best.crux.core": {
+      "version": "file:best.crux.core",
       "depth": 0,
       "source": "embedded",
       "dependencies": {}

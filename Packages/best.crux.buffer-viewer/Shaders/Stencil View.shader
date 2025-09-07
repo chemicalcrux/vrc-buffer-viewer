@@ -1,4 +1,4 @@
-Shader "Hidden/chemicalcrux/Stencil Viewer/Stencil View"
+Shader "Hidden/chemicalcrux/Buffer Viewer/Stencil View"
 {
     Properties {}
     SubShader
@@ -37,7 +37,7 @@ Shader "Hidden/chemicalcrux/Stencil Viewer/Stencil View"
         }
         ENDCG   
 
-        GrabPass { "_StencilPreserve" }
+        GrabPass { "_BufferPreserve" }
         Pass
         {
             Blend One Zero
@@ -196,7 +196,7 @@ Shader "Hidden/chemicalcrux/Stencil Viewer/Stencil View"
         }
         GrabPass
         {
-            "_StencilViewGrab"
+            "_BufferViewGrab"
         }
         Pass
         {
@@ -205,7 +205,7 @@ Shader "Hidden/chemicalcrux/Stencil Viewer/Stencil View"
             #pragma fragment frag
             
             SamplerState LinearRepeat;
-            Texture2D _StencilPreserve;
+            Texture2D _BufferPreserve;
 
             fixed4 frag(v2f i) : SV_Target
             {
@@ -213,7 +213,7 @@ Shader "Hidden/chemicalcrux/Stencil Viewer/Stencil View"
                 float4 grabPos = ComputeGrabScreenPos(i.clipPos);
                 grabPos /= grabPos.w;
 
-                float4 col = _StencilPreserve.Sample(LinearRepeat, grabPos.xy);
+                float4 col = _BufferPreserve.Sample(LinearRepeat, grabPos.xy);
                 col.w = 1;
                 return col;
             }

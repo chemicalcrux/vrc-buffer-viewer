@@ -2,6 +2,7 @@
     <uie:PropertyField binding-path="active" />
     <uie:PropertyField binding-path="mode" name="Mode" />
     <ChemicalCrux.StencilViewer.Editor.Controls.StencilRefField name="StencilRef" binding-path="stencilRef" />
+    <uie:PropertyField binding-path="showFarPlane" />
     <ChemicalCrux.StencilViewer.Editor.Controls.RenderQueueTimeline name="RenderQueue" label="Queue" high-value="5000" show-input-field="true" slider-binding-path="renderQueue" style="width: 400px;" />
     <ui:Slider high-value="1" binding-path="opacity" label="Opacity" />
     <ui:EnumField label="Blend" type="ChemicalCrux.StencilViewer.Editor.BlendMode, StencilViewerEditor" binding-path="blendMode" />

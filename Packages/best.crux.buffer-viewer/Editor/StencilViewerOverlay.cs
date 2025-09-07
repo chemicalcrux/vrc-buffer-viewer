@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ChemicalCrux.StencilViewer.Editor.Controls;
+using Crux.Core.Editor;
 using UnityEditor;
 using UnityEditor.Overlays;
 using UnityEditor.UIElements;
@@ -14,7 +15,8 @@ namespace ChemicalCrux.StencilViewer.Editor
     public enum ViewerMode
     {
         ShowBuffer,
-        ShowMatching
+        ShowMatching,
+        ShowDepth
     }
 
     [Overlay(typeof(SceneView), "Stencil Viewer")]
@@ -30,12 +32,15 @@ namespace ChemicalCrux.StencilViewer.Editor
 
         private Material stencilViewerMaterial;
         private Material stencilMatcherMaterial;
+        private Material depthViewerMaterial;
 
         private Material displayResultMaterial;
 
         private StencilViewerData data;
 
         private static readonly int StencilRef = Shader.PropertyToID("_StencilRef");
+        private static readonly int ShowFarPlane = Shader.PropertyToID("_ShowFarPlane");
+        
         private static readonly int Opacity = Shader.PropertyToID("_Opacity");
         private static readonly int BlendMode = Shader.PropertyToID("_BlendMode");
 
@@ -59,6 +64,7 @@ namespace ChemicalCrux.StencilViewer.Editor
             activeMaterial.renderQueue = data.renderQueue;
 
             activeMaterial.SetInteger(StencilRef, data.stencilRef);
+            activeMaterial.SetFloat(ShowFarPlane, data.showFarPlane ? 1 : 0);
 
             displayResultMaterial.SetFloat(Opacity, data.opacity);
             displayResultMaterial.SetFloat(BlendMode, (float) data.blendMode);
@@ -121,6 +127,7 @@ namespace ChemicalCrux.StencilViewer.Editor
 
             Object.DestroyImmediate(stencilViewerMaterial);
             Object.DestroyImmediate(stencilMatcherMaterial);
+            Object.DestroyImmediate(depthViewerMaterial);
 
             Object.DestroyImmediate(mesh);
 
@@ -129,15 +136,17 @@ namespace ChemicalCrux.StencilViewer.Editor
 
         private void LoadShaders()
         {
-            var viewShader = Shader.Find("Hidden/chemicalcrux/Stencil Viewer/Stencil View");
-            var matchShader = Shader.Find("Hidden/chemicalcrux/Stencil Viewer/Stencil Match");
-            var displayShader = Shader.Find("Hidden/chemicalcrux/Stencil Viewer/Display Result");
+            var viewShader = Shader.Find("Hidden/chemicalcrux/Buffer Viewer/Stencil View");
+            var matchShader = Shader.Find("Hidden/chemicalcrux/Buffer Viewer/Stencil Match");
+            var depthShader = Shader.Find("Hidden/chemicalcrux/Buffer Viewer/Depth View");
+            var displayShader = Shader.Find("Hidden/chemicalcrux/Buffer Viewer/Display Result");
 
             if (!viewShader || !matchShader || !displayShader)
                 return;
             
             stencilViewerMaterial = new Material(viewShader);
             stencilMatcherMaterial = new Material(matchShader);
+            depthViewerMaterial = new Material(depthShader);
 
             displayResultMaterial = new Material(displayShader);
 
@@ -156,6 +165,9 @@ namespace ChemicalCrux.StencilViewer.Editor
                 case ViewerMode.ShowMatching:
                     stencilRefField.style.display = DisplayStyle.Flex;
                     activeMaterial = stencilMatcherMaterial;
+                    break;
+                case ViewerMode.ShowDepth:
+                    activeMaterial = depthViewerMaterial;
                     break;
                 default:
                     Debug.LogWarning("I don't know how you picked an invalid mode");
@@ -181,12 +193,12 @@ namespace ChemicalCrux.StencilViewer.Editor
 
         private void SetupUI()
         {
-            var uxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                "Packages/com.chemicalcrux.stencil-viewer/UI/Overlay.uxml");
-
-            if (uxml == null)
+            if (!AssetReference.TryParse("96a0258b89adc440e85f879eed057739,9197481963319205126", out var assetRef))
                 return;
 
+            if (!assetRef.TryLoad(out VisualTreeAsset uxml))
+                return;
+            
             uxml.CloneTree(root);
 
             var so = new SerializedObject(data);
