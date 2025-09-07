@@ -9,5 +9,8 @@
     "name": "chemicalcrux",
     "email": "chemicalcrux@gmail.com",
     "url": "https://github.com/chemicalcrux/"
+  },
+  "vpmDependencies" : {
+    "best.crux.core" : ">=0.7.0 <0.8.0"
   }
 }
