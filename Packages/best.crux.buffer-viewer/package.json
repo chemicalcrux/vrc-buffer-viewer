@@ -1,9 +1,9 @@
 {
-  "name": "com.chemicalcrux.stencil-viewer",
-  "displayName": "Stencil Viewer",
-  "version": "0.1.3",
+  "name": "best.crux.buffer-viewer",
+  "displayName": "Buffer Viewer",
+  "version": "0.2.0",
   "unity": "2022.3",
-  "description": "Shows the contents of the stencil buffer.",
+  "description": "Visualizes the stencil and depth buffers.",
   "vrchatVersion": "2025.1.2",
   "author": {
     "name": "chemicalcrux",
