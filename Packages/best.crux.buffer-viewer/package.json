@@ -1,7 +1,7 @@
 {
   "name": "best.crux.buffer-viewer",
   "displayName": "Buffer Viewer",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "unity": "2022.3",
   "description": "Visualizes the stencil and depth buffers.",
   "vrchatVersion": "2025.1.2",
