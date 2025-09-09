@@ -8,9 +8,8 @@ namespace Crux.BufferViewer.Editor.Controls
     {
         private int stencilRef;
 
-        private Label label;
-        private SliderInt slider;
-        private List<Toggle> toggles = new();
+        private readonly SliderInt slider;
+        private readonly List<Toggle> toggles = new();
 
         public StencilRefField() : this("Stencil Ref")
         {
@@ -22,11 +21,11 @@ namespace Crux.BufferViewer.Editor.Controls
             slider = new SliderInt(0, 255);
             slider.showInputField = true;
 
-            label = new Label(labelText);
+            var label = new Label(labelText);
 
             Add(label);
 
-            slider.RegisterValueChangedCallback(evt =>
+            slider.RegisterValueChangedCallback(_ =>
             {
                 value = slider.value;
             });
@@ -42,7 +41,7 @@ namespace Crux.BufferViewer.Editor.Controls
                 var toggle = new Toggle();
                 
                 toggles.Add(toggle);
-                toggle.RegisterValueChangedCallback(evt =>
+                toggle.RegisterValueChangedCallback(_ =>
                 {
                     value = GetToggleValue();
                 });
@@ -83,11 +82,7 @@ namespace Crux.BufferViewer.Editor.Controls
 
         public new class UxmlTraits : BindableElement.UxmlTraits
         {
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-                var ate = ve as StencilRefField;
-            }
+            
         }
 
         public void SetValueWithoutNotify(int newValue)

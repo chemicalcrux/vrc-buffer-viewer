@@ -29,11 +29,7 @@ namespace Crux.BufferViewer.Editor.Controls
 
         public new class UxmlTraits : SliderInt.UxmlTraits
         {
-            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
-            {
-                base.Init(ve, bag, cc);
-                var ate = ve as RenderQueueSlider;
-            }
+            
         }
 
         public void AddTick(int position)
@@ -93,7 +89,7 @@ namespace Crux.BufferViewer.Editor.Controls
 
                 value = tick.position;
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException)
             {
             }
         }
@@ -108,8 +104,9 @@ namespace Crux.BufferViewer.Editor.Controls
 
                 value = tick.position;
             }
-            catch (InvalidOperationException e)
+            catch (InvalidOperationException)
             {
+                
             }
         }
 

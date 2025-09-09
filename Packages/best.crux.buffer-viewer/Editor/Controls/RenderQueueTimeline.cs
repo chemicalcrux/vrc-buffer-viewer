@@ -14,7 +14,7 @@ namespace Crux.BufferViewer.Editor.Controls
 
                 slider.highValue = 5000;
                 slider.showInputField = true;
-                slider.bindingPath = field.BindingPath;
+                slider.bindingPath = field!.BindingPath;
 
                 slider.style.marginBottom = 24;
 

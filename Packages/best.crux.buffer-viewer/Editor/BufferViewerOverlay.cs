@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Crux.BufferViewer.Editor.Controls;
@@ -261,10 +260,6 @@ namespace Crux.BufferViewer.Editor
 
         public IEnumerable<(int, IEnumerable<(Renderer, Material)>)> GetAllRendererMaterialPairs()
         {
-            Vector3 x = default;
-            float y = 1;
-            Math.Abs(y);
-            
             return Object.FindObjectsByType<Renderer>(FindObjectsSortMode.InstanceID)
                 .SelectMany(static renderer => renderer.sharedMaterials
                     .Select(material => (renderer, material)))

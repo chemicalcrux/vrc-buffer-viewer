@@ -15,7 +15,7 @@ namespace Crux.BufferViewer.Editor
         public ViewerMode mode;
         
         public int renderQueue = 4000;
-        public int stencilRef = 0;
+        public int stencilRef;
         public CompareFunction stencilComp = CompareFunction.Equal;
         
         public float opacity = 1;
