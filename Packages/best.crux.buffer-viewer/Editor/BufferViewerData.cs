@@ -9,7 +9,7 @@ namespace Crux.BufferViewer.Editor
         Multiply = 1
     }
     
-    public class StencilViewerData : ScriptableSingleton<StencilViewerData>
+    public class BufferViewerData : ScriptableSingleton<BufferViewerData>
     {
         public bool active;
         public ViewerMode mode;

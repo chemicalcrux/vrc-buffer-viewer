@@ -20,7 +20,7 @@ namespace Crux.BufferViewer.Editor
     }
 
     [Overlay(typeof(SceneView), "Buffer Viewer")]
-    public class StencilViewerOverlay : Overlay
+    public class BufferViewerOverlay : Overlay
     {
         private VisualElement root;
         
@@ -36,7 +36,7 @@ namespace Crux.BufferViewer.Editor
 
         private Material displayResultMaterial;
 
-        private StencilViewerData data;
+        private BufferViewerData data;
 
         private static readonly int StencilRef = Shader.PropertyToID("_StencilRef");
         private static readonly int StencilComp = Shader.PropertyToID("_StencilComp");
@@ -122,7 +122,7 @@ namespace Crux.BufferViewer.Editor
                 }
             };
 
-            data = StencilViewerData.instance;
+            data = BufferViewerData.instance;
         }
 
         public override void OnWillBeDestroyed()
