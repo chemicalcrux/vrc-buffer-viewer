@@ -9,6 +9,11 @@
     </ui:GroupBox>
     <ui:GroupBox name="DepthSettings">
         <uie:PropertyField binding-path="showFarPlane" />
+        <ui:VisualElement name="VisualElement" style="flex-grow: 1; flex-direction: row;">
+            <ui:FloatField value="42.2" binding-path="depthRange.x" style="flex-basis: 60px;" />
+            <ui:MinMaxSlider min-value="0" max-value="1" low-limit="0" high-limit="1" binding-path="depthRange" style="flex-grow: 1;" />
+            <ui:FloatField value="42.2" binding-path="depthRange.y" style="flex-basis: 60px;" />
+        </ui:VisualElement>
     </ui:GroupBox>
     <Crux.BufferViewer.Editor.Controls.RenderQueueTimeline name="RenderQueue" label="Queue" high-value="5000" show-input-field="true" slider-binding-path="renderQueue" style="width: 400px;" />
     <ui:Slider high-value="1" binding-path="opacity" label="Opacity" />

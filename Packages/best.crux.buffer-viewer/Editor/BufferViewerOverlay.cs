@@ -39,7 +39,10 @@ namespace Crux.BufferViewer.Editor
 
         private static readonly int StencilRef = Shader.PropertyToID("_StencilRef");
         private static readonly int StencilComp = Shader.PropertyToID("_StencilComp");
+        
         private static readonly int ShowFarPlane = Shader.PropertyToID("_ShowFarPlane");
+        private static readonly int DepthNearPlane = Shader.PropertyToID("_DepthNearPlane");
+        private static readonly int DepthFarPlane = Shader.PropertyToID("_DepthFarPlane");
         
         private static readonly int Opacity = Shader.PropertyToID("_Opacity");
         private static readonly int BlendMode = Shader.PropertyToID("_BlendMode");
@@ -69,7 +72,15 @@ namespace Crux.BufferViewer.Editor
 
             activeMaterial.SetInteger(StencilRef, data.stencilRef);
             activeMaterial.SetFloat(StencilComp, (int) data.stencilComp);
+
+            float logMin = Mathf.Log(camera.nearClipPlane, 2);
+            float logMax = Mathf.Log(camera.farClipPlane, 2);
+
+            Debug.Log(logMin + " " + logMax);
+            
             activeMaterial.SetFloat(ShowFarPlane, data.showFarPlane ? 1 : 0);
+            activeMaterial.SetFloat(DepthNearPlane, Mathf.Lerp(logMin, logMax, data.depthRange.x));
+            activeMaterial.SetFloat(DepthFarPlane, Mathf.Lerp(logMin, logMax, data.depthRange.y));
 
             displayResultMaterial.SetFloat(Opacity, data.opacity);
             displayResultMaterial.SetFloat(BlendMode, (float) data.blendMode);

@@ -63,6 +63,9 @@ Shader "Hidden/chemicalcrux/Buffer Viewer/Depth View"
 
             bool _ShowFarPlane;
 
+            float _DepthNearPlane;
+            float _DepthFarPlane;
+
             float inverse_lerp(float from, float to, float value)
             {
                 return (value - from) / (to - from);
@@ -83,8 +86,7 @@ Shader "Hidden/chemicalcrux/Buffer Viewer/Depth View"
                     return (uv.x + uv.y) % 0.02 < 0.01 ? float4(0.4, 0, 0, 1) : float4(0.5, 0, 0, 1);
                 }
 
-                depth = LinearEyeDepth(depth);
-                depth = inverse_lerp(0, 25, depth);
+                depth = inverse_lerp(_DepthNearPlane, _DepthFarPlane, log2(LinearEyeDepth(depth)));
 
                 return float4(depth.xxx, 1);
             }

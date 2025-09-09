@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace Crux.BufferViewer.Editor
@@ -22,5 +23,6 @@ namespace Crux.BufferViewer.Editor
         public BlendMode blendMode;
 
         public bool showFarPlane;
+        public Vector2 depthRange;
     }
 }
