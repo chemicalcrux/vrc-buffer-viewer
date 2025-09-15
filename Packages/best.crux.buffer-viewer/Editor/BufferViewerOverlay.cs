@@ -61,13 +61,13 @@ namespace Crux.BufferViewer.Editor
 
             if (!data.active)
                 return;
-
-            if (!(mesh && activeMaterial))
-                return;
-
+            
             if (!shadersReady)
                 return;
             
+            if (!(mesh && activeMaterial))
+                return;
+
             activeMaterial.renderQueue = data.renderQueue;
 
             activeMaterial.SetInteger(StencilRef, data.stencilRef);
@@ -110,6 +110,8 @@ namespace Crux.BufferViewer.Editor
             Camera.onPreCull -= Draw;
             Camera.onPreCull += Draw;
 
+            data = BufferViewerData.instance;
+            
             mesh = new Mesh
             {
                 vertices = new Vector3[]
@@ -127,10 +129,9 @@ namespace Crux.BufferViewer.Editor
                     1,
                     3,
                     2
-                }
+                },
+                hideFlags = HideFlags.DontSave
             };
-
-            data = BufferViewerData.instance;
         }
 
         public override void OnWillBeDestroyed()
@@ -161,8 +162,12 @@ namespace Crux.BufferViewer.Editor
             stencilViewerMaterial = new Material(viewShader);
             stencilMatcherMaterial = new Material(matchShader);
             depthViewerMaterial = new Material(depthShader);
-
             displayResultMaterial = new Material(displayShader);
+
+            stencilViewerMaterial.hideFlags = HideFlags.DontSave;
+            stencilMatcherMaterial.hideFlags = HideFlags.DontSave;
+            depthViewerMaterial.hideFlags = HideFlags.DontSave;
+            displayResultMaterial.hideFlags = HideFlags.DontSave;
 
             shadersReady = true;
         }
