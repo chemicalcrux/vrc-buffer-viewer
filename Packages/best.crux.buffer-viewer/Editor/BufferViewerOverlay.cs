@@ -76,8 +76,6 @@ namespace Crux.BufferViewer.Editor
             float logMin = Mathf.Log(camera.nearClipPlane, 2);
             float logMax = Mathf.Log(camera.farClipPlane, 2);
 
-            Debug.Log(logMin + " " + logMax);
-            
             activeMaterial.SetFloat(ShowFarPlane, data.showFarPlane ? 1 : 0);
             activeMaterial.SetFloat(DepthNearPlane, Mathf.Lerp(logMin, logMax, data.depthRange.x));
             activeMaterial.SetFloat(DepthFarPlane, Mathf.Lerp(logMin, logMax, data.depthRange.y));
