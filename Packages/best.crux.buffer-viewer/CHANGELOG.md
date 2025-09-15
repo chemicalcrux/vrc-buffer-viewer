@@ -9,6 +9,14 @@ Releases prior to 0.2.0 were deleted, as they used a different package ID. This 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.3] - 2025-09-15
+
+### Fixed
+
+- Stop spamming the logs about the near/far clip distances
+- The LICENSE and README files did not have .meta files
+  - This is probably a non-issue, but it's for the sake of consistency.
+
 ## [0.2.2] - 2025-09-15
 
 ### Added
