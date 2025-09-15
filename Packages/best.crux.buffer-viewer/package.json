@@ -13,8 +13,8 @@
   "vpmDependencies": {
     "best.crux.core": ">=0.8.0 <0.9.0"
   },
-  "changelogUrl": "https://github.com/chemicalcrux/vrc-physbone-calibrator/blob/main/Packages/best.crux.physbone-calibrator/CHANGELOG.md",
-  "documentationUrl": "https://chemicalcrux.github.io/vrc-docs/docs/code/best.crux.physbone-calibrator/",
+  "changelogUrl": "https://github.com/chemicalcrux/vrc-buffer-viewer/blob/main/Packages/best.crux.buffer-viewer/CHANGELOG.md",
+  "documentationUrl": "https://chemicalcrux.github.io/vrc-docs/docs/code/best.crux.buffer-viewer/",
   "samples": [
     {
       "displayName": "Demo",
