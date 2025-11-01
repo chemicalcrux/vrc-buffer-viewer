@@ -38,6 +38,7 @@ namespace Crux.BufferViewer.Editor
         private BufferViewerData data;
 
         private static readonly int StencilRef = Shader.PropertyToID("_StencilRef");
+        private static readonly int StencilReadMask = Shader.PropertyToID("_StencilReadMask");
         private static readonly int StencilComp = Shader.PropertyToID("_StencilComp");
         
         private static readonly int ShowFarPlane = Shader.PropertyToID("_ShowFarPlane");
@@ -47,7 +48,6 @@ namespace Crux.BufferViewer.Editor
         private static readonly int Opacity = Shader.PropertyToID("_Opacity");
         private static readonly int BlendMode = Shader.PropertyToID("_BlendMode");
 
-        private StencilRefField stencilRefField;
         private RenderQueueSlider renderQueueSlider;
 
         private VisualElement stencilSettingsHolder;
@@ -71,6 +71,8 @@ namespace Crux.BufferViewer.Editor
             activeMaterial.renderQueue = data.renderQueue;
 
             activeMaterial.SetInteger(StencilRef, data.stencilRef);
+            activeMaterial.SetFloat(StencilReadMask, data.stencilReadMask);
+            
             activeMaterial.SetFloat(StencilComp, (int) data.stencilComp);
 
             float logMin = Mathf.Log(camera.nearClipPlane, 2);
@@ -174,7 +176,6 @@ namespace Crux.BufferViewer.Editor
 
         private void SetMode()
         {
-            stencilRefField.style.display = DisplayStyle.None;
             stencilSettingsHolder.style.display = DisplayStyle.None;
             stencilTestSettingsHolder.style.display = DisplayStyle.None;
             depthSettingsHolder.style.display = DisplayStyle.None;
@@ -188,7 +189,6 @@ namespace Crux.BufferViewer.Editor
                 case ViewerMode.StencilTest:
                     stencilSettingsHolder.style.display = DisplayStyle.Flex;
                     stencilTestSettingsHolder.style.display = DisplayStyle.Flex;
-                    stencilRefField.style.display = DisplayStyle.Flex;
                     activeMaterial = stencilMatcherMaterial;
                     break;
                 case ViewerMode.DepthBuffer:
@@ -230,7 +230,6 @@ namespace Crux.BufferViewer.Editor
             var so = new SerializedObject(data);
             root.Bind(so);
 
-            stencilRefField = root.Q<StencilRefField>("StencilRef");
             stencilSettingsHolder = root.Q("StencilSettings");
             stencilTestSettingsHolder = root.Q("StencilTestSettings");
             depthSettingsHolder = root.Q("DepthSettings");

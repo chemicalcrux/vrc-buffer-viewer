@@ -4,24 +4,21 @@ using UnityEngine.UIElements;
 
 namespace Crux.BufferViewer.Editor.Controls
 {
-    public class StencilRefField : BindableElement, INotifyValueChanged<int>
+    public class BitmaskField : BindableElement, INotifyValueChanged<int>
     {
         private int stencilRef;
 
         private readonly SliderInt slider;
         private readonly List<Toggle> toggles = new();
 
-        public StencilRefField() : this("Stencil Ref")
-        {
-            
-        } 
+        private Label label;
         
-        public StencilRefField(string labelText)
+        public BitmaskField()
         {
             slider = new SliderInt(0, 255);
             slider.showInputField = true;
 
-            var label = new Label(labelText);
+            label = new Label();
 
             Add(label);
 
@@ -70,20 +67,34 @@ namespace Crux.BufferViewer.Editor.Controls
             Add(row);
         }
         
-        public new class UxmlFactory : UxmlFactory<StencilRefField, UxmlTraits>
+        public new class UxmlFactory : UxmlFactory<BitmaskField, UxmlTraits>
         {
             public override VisualElement Create(IUxmlAttributes bag, CreationContext cc)
             {
-                var field = base.Create(bag, cc) as StencilRefField;
+                var field = base.Create(bag, cc) as BitmaskField;
 
+                field.label.text = field.LabelText;
+                
                 return field;
             }
         }
 
         public new class UxmlTraits : BindableElement.UxmlTraits
         {
+            private readonly UxmlStringAttributeDescription label = new()
+                { name = "label", defaultValue = "" };
             
+            public override void Init(VisualElement ve, IUxmlAttributes bag, CreationContext cc)
+            {
+                base.Init(ve, bag, cc);
+                var ate = ve as BitmaskField;
+
+                ate!.LabelText = label.GetValueFromBag(bag, cc);
+            }
+             
         }
+
+        private string LabelText { get; set; }
 
         public void SetValueWithoutNotify(int newValue)
         {

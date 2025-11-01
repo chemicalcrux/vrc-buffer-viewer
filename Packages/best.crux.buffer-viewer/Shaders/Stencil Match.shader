@@ -3,6 +3,7 @@ Shader "Hidden/chemicalcrux/Buffer Viewer/Stencil Match"
     Properties
     {
         _StencilRef ("Stencil Ref", Integer) = 0
+        _StencilReadMask ("Stencil Read Mask", Float) = 0
         _StencilComp ("Stencil Comp", Float) = 0
     }
     SubShader
@@ -64,7 +65,7 @@ Shader "Hidden/chemicalcrux/Buffer Viewer/Stencil Match"
             Stencil
             {
                 Ref [_StencilRef]
-                ReadMask 255
+                ReadMask [_StencilReadMask]
                 Comp [_StencilComp]
             }
             

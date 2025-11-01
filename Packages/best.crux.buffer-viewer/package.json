@@ -1,7 +1,7 @@
 {
   "name": "best.crux.buffer-viewer",
   "displayName": "Buffer Viewer",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "unity": "2022.3",
   "description": "Visualizes the stencil and depth buffers.",
   "vrchatVersion": "2025.1.2",
@@ -11,7 +11,7 @@
     "url": "https://github.com/chemicalcrux/"
   },
   "vpmDependencies": {
-    "best.crux.core": ">=0.8.0 <0.9.0"
+    "best.crux.core": ">=0.8.0 <0.10.0"
   },
   "changelogUrl": "https://github.com/chemicalcrux/vrc-buffer-viewer/blob/main/Packages/best.crux.buffer-viewer/CHANGELOG.md",
   "documentationUrl": "https://chemicalcrux.github.io/vrc-docs/docs/code/best.crux.buffer-viewer/",

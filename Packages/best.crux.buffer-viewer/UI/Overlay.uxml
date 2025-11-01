@@ -4,7 +4,8 @@
     <ui:GroupBox name="StencilSettings">
         <ui:GroupBox name="StencilTestSettings">
             <uie:PropertyField binding-path="stencilComp" />
-            <Crux.BufferViewer.Editor.Controls.StencilRefField name="StencilRef" binding-path="stencilRef" />
+            <Crux.BufferViewer.Editor.Controls.BitmaskField name="StencilRef" binding-path="stencilRef" label="Stencil Ref" />
+            <Crux.BufferViewer.Editor.Controls.BitmaskField name="ReadMask" binding-path="stencilReadMask" label="Read Mask" />
         </ui:GroupBox>
     </ui:GroupBox>
     <ui:GroupBox name="DepthSettings">
